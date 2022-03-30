@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -42,7 +42,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QListView" name="listaProductos"/>
+        <widget class="QListWidget" name="listaProductos"/>
        </item>
       </layout>
      </item>
@@ -73,14 +73,14 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="precio">
+        <widget class="QLabel" name="preciol">
          <property name="text">
           <string>Precio</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_3">
+        <widget class="QLineEdit" name="precio">
          <property name="text">
           <string/>
          </property>
@@ -91,7 +91,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="anadir">
+        <widget class="QPushButton" name="btnanadir">
          <property name="text">
           <string>Añadir</string>
          </property>
