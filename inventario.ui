@@ -114,7 +114,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="buscar">
+      <widget class="QPushButton" name="busqueda">
        <property name="text">
         <string>Buscar(por producto)</string>
        </property>

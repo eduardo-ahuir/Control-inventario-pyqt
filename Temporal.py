@@ -66,7 +66,12 @@ class MainWindow(QMainWindow, inventario_ui):
         self.base.consulta(
             "UPDATE " + tabla + " SET precio=" + self.precioEdit.text() + " WHERE producto='" + self.listaProductos.currentItem().text() + "'")
 
-    # def buscar(self):
+    def buscar(self):
+        datos = self.base.consulta("SELECT * FROM almacen WHERE producto= "+"'"+self.producto.text()+"'")
+        self.listaProductos.clear()
+        for i in range(len(datos)):
+            item = QListWidgetItem(str(datos[i][:]))
+            self.listaProductos.insertItem(i, item)
 
     def mostrar(self):
         datos = self.base.consulta("SELECT * FROM " + tabla)
@@ -90,6 +95,9 @@ class MainWindow(QMainWindow, inventario_ui):
         self.eliminar.pressed.connect(self.borrar)
         self.eliminar.pressed.connect(self.mostrar)
         self.eliminar.pressed.connect(self.limpiar)
+        self.busqueda.pressed.connect(self.buscar)
+        self.busqueda.pressed.connect(self.limpiar)
+
 
 
 app = QApplication(sys.argv)
