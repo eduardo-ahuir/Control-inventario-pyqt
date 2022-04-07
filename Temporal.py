@@ -1,9 +1,9 @@
-import sqlite3, sys
+import sqlite3
+import sys
 
-from PyQt5 import QtGui, uic
-
+from PyQt5 import uic
 from PyQt5.QtWidgets import (
-    QApplication, QMessageBox, QMainWindow, QListWidgetItem
+    QApplication, QMainWindow, QListWidgetItem
 )
 
 fichero_interfaz = "./inventario.ui"
@@ -29,7 +29,7 @@ class baseDatos():
 
     def Borrar(self, elemento):
         self.cursor.execute("DELETE FROM " + tabla + " WHERE PRODUCTO = '" + elemento + "'")
-        self.con.commit
+        self.con.commit()
 
     def introducir(self, registro):
         self.cursor.execute("INSERT INTO " + tabla + " VALUES (?,?,?)", registro)
@@ -51,53 +51,56 @@ class MainWindow(QMainWindow, inventario_ui):
         self.conexionSenales()
         self.mostrar()
 
+    def limpiar(self):
+        self.producto.clear()
+        self.unidades.clear()
+        self.precio.clear()
+
     def anadir(self):
         registro = (self.producto.text(), self.unidades.text(), self.precio.text())
         self.base.introducir(registro)
+        self.listaProductos.addItem(self.producto.text())
+        self.limpiar()
 
     def borrar(self):
         elemento = self.producto.text()
+        cborrar = self.listaProductos.currentRow()
+        print(cborrar)
+        self.listaProductos.takeItem(cborrar)
         self.base.Borrar(elemento)
         print("Borrado")
+        self.limpiar()
 
     def editar(self):
         self.base.consulta(
             "UPDATE " + tabla + " SET existencias=" + self.unidadesEdit.text() + "WHERE producto='" + self.listaProductos.currentItem().text() + "'")
         self.base.consulta(
             "UPDATE " + tabla + " SET precio=" + self.precioEdit.text() + " WHERE producto='" + self.listaProductos.currentItem().text() + "'")
-
+        self.mostrar()
+        print("Edicion hecha")
+        self.limpiar()
     def buscar(self):
-        datos = self.base.consulta("SELECT * FROM almacen WHERE producto= "+"'"+self.producto.text()+"'")
+        datos = self.base.consulta(
+            "SELECT * FROM almacen WHERE producto= " + "'" + self.listaProductos.currentItem().text() + "'")
         self.listaProductos.clear()
         for i in range(len(datos)):
             item = QListWidgetItem(str(datos[i][:]))
             self.listaProductos.insertItem(i, item)
-
+            self.limpiar()
     def mostrar(self):
         datos = self.base.consulta("SELECT * FROM " + tabla)
         self.listaProductos.clear()
         for i in range(len(datos)):
-            item = QListWidgetItem(str(datos[i][:]))
+            item = QListWidgetItem(str(datos[i][0]))
             self.listaProductos.insertItem(i, item)
-
-    def limpiar(self):
-        self.producto.clear()
-        self.unidades.clear()
-        self.precio.clear()
-
+            self.limpiar()
     def pruebas(self):
         print("hola")
 
     def conexionSenales(self):
         self.btnanadir.pressed.connect(self.anadir)
-        self.btnanadir.pressed.connect(self.limpiar)
-        self.btnanadir.pressed.connect(self.mostrar)
         self.eliminar.pressed.connect(self.borrar)
-        self.eliminar.pressed.connect(self.mostrar)
-        self.eliminar.pressed.connect(self.limpiar)
         self.busqueda.pressed.connect(self.buscar)
-        self.busqueda.pressed.connect(self.limpiar)
-
 
 
 app = QApplication(sys.argv)
