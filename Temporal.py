@@ -63,7 +63,7 @@ class MainWindow(QMainWindow, inventario_ui):
         self.limpiar()
 
     def borrar(self):
-        elemento = self.producto.text()
+        elemento = self.listaProductos.currentItem().text()
         cborrar = self.listaProductos.currentRow()
         print(cborrar)
         self.listaProductos.takeItem(cborrar)
@@ -73,20 +73,30 @@ class MainWindow(QMainWindow, inventario_ui):
 
     def editar(self):
         self.base.consulta(
-            "UPDATE " + tabla + " SET existencias=" + self.unidadesEdit.text() + "WHERE producto='" + self.listaProductos.currentItem().text() + "'")
+            "UPDATE " + tabla + " SET existencias=" + self.producto.text() + "WHERE producto='" + self.listaProductos.currentItem().text() + "'")
         self.base.consulta(
-            "UPDATE " + tabla + " SET precio=" + self.precioEdit.text() + " WHERE producto='" + self.listaProductos.currentItem().text() + "'")
+            "UPDATE " + tabla + " SET precio=" + self.precio.text() + " WHERE producto='" + self.listaProductos.currentItem().text() + "'")
         self.mostrar()
         print("Edicion hecha")
         self.limpiar()
+
     def buscar(self):
-        datos = self.base.consulta(
-            "SELECT * FROM almacen WHERE producto= " + "'" + self.listaProductos.currentItem().text() + "'")
+        datos = self.base.consulta("SELECT * FROM almacen WHERE producto= " + "'" + self.listaProductos.currentItem().text() + "'")
         self.listaProductos.clear()
         for i in range(len(datos)):
             item = QListWidgetItem(str(datos[i][:]))
             self.listaProductos.insertItem(i, item)
-            self.limpiar()
+            self.listaProductos.setCurrentRow(0)
+            printar=str(self.listaProductos.currentItem().text())
+            printar =printar.replace("'", '')
+            printar = printar.replace("(", '')
+            printar = printar.replace(")", '')
+            printar=printar.split(',')
+            print(printar[0])
+            self.producto.setText(printar[0])
+            self.unidades.setText(printar[1])
+            self.precio.setText(printar[2])
+
     def mostrar(self):
         datos = self.base.consulta("SELECT * FROM " + tabla)
         self.listaProductos.clear()
