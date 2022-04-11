@@ -72,30 +72,20 @@ class MainWindow(QMainWindow, inventario_ui):
         self.limpiar()
 
     def editar(self):
-        self.base.consulta(
-            "UPDATE " + tabla + " SET existencias=" + self.producto.text() + "WHERE producto='" + self.listaProductos.currentItem().text() + "'")
-        self.base.consulta(
-            "UPDATE " + tabla + " SET precio=" + self.precio.text() + " WHERE producto='" + self.listaProductos.currentItem().text() + "'")
+        self.base.consulta("UPDATE " + tabla + " SET existencias= " + self.producto.text() + "WHERE producto='" + self.listaProductos.currentItem().text())
+
+        self.limpiar()
         self.mostrar()
         print("Edicion hecha")
-        self.limpiar()
+
 
     def buscar(self):
         datos = self.base.consulta("SELECT * FROM almacen WHERE producto= " + "'" + self.listaProductos.currentItem().text() + "'")
-        self.listaProductos.clear()
         for i in range(len(datos)):
-            item = QListWidgetItem(str(datos[i][:]))
-            self.listaProductos.insertItem(i, item)
             self.listaProductos.setCurrentRow(0)
-            printar=str(self.listaProductos.currentItem().text())
-            printar =printar.replace("'", '')
-            printar = printar.replace("(", '')
-            printar = printar.replace(")", '')
-            printar=printar.split(',')
-            print(printar[0])
-            self.producto.setText(printar[0])
-            self.unidades.setText(printar[1])
-            self.precio.setText(printar[2])
+            self.producto.setText(datos[0][0])
+            self.unidades.setText(datos[0][1])
+            self.precio.setText(datos[0][2])
 
     def mostrar(self):
         datos = self.base.consulta("SELECT * FROM " + tabla)
@@ -111,6 +101,7 @@ class MainWindow(QMainWindow, inventario_ui):
         self.btnanadir.pressed.connect(self.anadir)
         self.eliminar.pressed.connect(self.borrar)
         self.busqueda.pressed.connect(self.buscar)
+        self.btneditar.pressed.connect(self.editar)
 
 
 app = QApplication(sys.argv)
