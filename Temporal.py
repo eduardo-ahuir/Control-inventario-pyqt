@@ -72,17 +72,18 @@ class MainWindow(QMainWindow, inventario_ui):
         self.limpiar()
 
     def editar(self):
-        self.base.consulta("UPDATE " + tabla + " SET existencias= " + self.producto.text() + "WHERE producto='" + self.listaProductos.currentItem().text())
-
+        self.base.consulta("UPDATE "+tabla+" SET producto='"+self.producto.text()+"' WHERE producto = '"+self.listaProductos.currentItem().text()+ "'")
+        self.base.consulta("UPDATE " + tabla + " SET existencias='" + self.unidades.text() + "' WHERE producto = '" + self.listaProductos.currentItem().text() + "'")
+        self.base.consulta("UPDATE " + tabla + " SET precio='" + self.precio.text() + "' WHERE producto = '" + self.listaProductos.currentItem().text() + "'")
+        print(self.unidades.text())
         self.limpiar()
         self.mostrar()
         print("Edicion hecha")
 
 
     def buscar(self):
-        datos = self.base.consulta("SELECT * FROM almacen WHERE producto= " + "'" + self.listaProductos.currentItem().text() + "'")
+        datos = self.base.consulta("SELECT * FROM almacen WHERE producto= '" + self.listaProductos.currentItem().text() + "'")
         for i in range(len(datos)):
-            self.listaProductos.setCurrentRow(0)
             self.producto.setText(datos[0][0])
             self.unidades.setText(datos[0][1])
             self.precio.setText(datos[0][2])
